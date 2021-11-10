@@ -42,19 +42,20 @@ const Registration2 = (props) => {
       name,
       password,
     };
-    axios.post(`${root}users/user`)
+    axios.post(`${root}users/user`,data)
     .then((res)=>{
       setState({
         ...state,
-        step1: false,
-        step2: true,
+        step2: false,
+        step3:true,
+        isloading:false,
       });
     })
     .catch((err)=>{
       setState({
         ...state,
-        step1: false,
-        step2: true,
+        step2:false,
+        isloading:false,
         errorMessage:"Failed to register"
       })
     })
