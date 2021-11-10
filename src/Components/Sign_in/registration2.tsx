@@ -5,11 +5,11 @@ import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import "./signin.css";
 import Steps from "../step";
-import { Appcontext } from "../../config";
+import { Appcontext, root } from "../../config";
 
 const Registration2 = (props) => {
   const { state, setState }: any = useContext(Appcontext);
-  const { password, confirm_password, errorMessage } = state;
+  const { password, confirm_password, email,name,isloading,errorMessage } = state;
   const onchange = (e) => {
     setState({
       ...state,
@@ -30,12 +30,35 @@ const Registration2 = (props) => {
         errorMessage:"confirm password must be equal to password"
       }) 
      }
+     submitform()
+  }
+  const submitform = () => {
     setState({
       ...state,
-      step3:true,
-      step2:false
+      isloading:true,
     })
-  }
+    const data = {
+      email,
+      name,
+      password,
+    };
+    axios.post(`${root}users/user`)
+    .then((res)=>{
+      setState({
+        ...state,
+        step1: false,
+        step2: true,
+      });
+    })
+    .catch((err)=>{
+      setState({
+        ...state,
+        step1: false,
+        step2: true,
+        errorMessage:"Failed to register"
+      })
+    })
+  };
   return (
     <div>
       <div className="container">
@@ -71,7 +94,7 @@ const Registration2 = (props) => {
               <label className="input-label">Confirm Password</label>
             </div>
             <div className="action">
-              <button className="action-button" onClick={save_step2}>Submit</button>
+              <button className="action-button" onClick={save_step2}>{isloading?"Submitting":"Submit"}</button>
             </div>
           </form>
           <div className="card-info">
